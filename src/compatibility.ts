@@ -1,4 +1,4 @@
-import type { Conflict, Diet, DietEvaluation, Patient } from "./types";
+import type { Conflict, Diet, DietEvaluation, Patient, Severity } from "./types";
 
 const normalize = (value: string) => value.trim().toLocaleLowerCase("es");
 
@@ -52,4 +52,9 @@ export function getAssociatedDiets(diets: Diet[], patient: Patient): DietEvaluat
       if (a.isSafe !== b.isSafe) return a.isSafe ? -1 : 1;
       return b.matchScore - a.matchScore;
     });
+}
+
+export function getWorstSeverity(conflicts: Conflict[]): Severity | null {
+  if (conflicts.some((conflict) => conflict.severity === "critical")) return "critical";
+  return conflicts.length > 0 ? "warning" : null;
 }

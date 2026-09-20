@@ -20,7 +20,7 @@ import {
   X,
 } from "lucide-react";
 import { diets, diseases, patients } from "./data";
-import { getAssociatedDiets } from "./compatibility";
+import { getAssociatedDiets, getWorstSeverity } from "./compatibility";
 import type { Assignment, DietEvaluation, Patient } from "./types";
 
 const ASSIGNMENT_STORAGE_KEY = "epc28-diet-assignment";
@@ -161,11 +161,11 @@ function App() {
               <div className="risk-section">
                 <span className="clinical-label"><ShieldAlert size={15} /> Factores de seguridad</span>
                 <div className="risk-row">
-                  <span>Alergias</span>
+                  <span>Alergias <i className="severity-hint critical">riesgo crítico</i></span>
                   <div>{patient.allergies.length ? patient.allergies.map((item) => <b className="risk-pill critical" key={item}>{item}</b>) : <b className="neutral-pill">Ninguna</b>}</div>
                 </div>
                 <div className="risk-row">
-                  <span>Incompatibilidades</span>
+                  <span>Incompatibilidades <i className="severity-hint warning">precaución</i></span>
                   <div>{patient.incompatibilities.length ? patient.incompatibilities.map((item) => <b className="risk-pill warning" key={item}>{item}</b>) : <b className="neutral-pill">Ninguna</b>}</div>
                 </div>
               </div>
@@ -193,9 +193,12 @@ function App() {
                   <h2 id="diet-heading">Dietas asociadas</h2>
                 </div>
               </div>
-              <div className="result-summary" aria-label={`${evaluations.length} dietas encontradas, ${safeCount} seguras`}>
-                <span>{evaluations.length} encontradas</span>
-                <strong><ShieldCheck size={16} /> {safeCount} seguras</strong>
+              <div
+                className="result-summary"
+                aria-label={`${evaluations.length} ${evaluations.length === 1 ? "dieta encontrada" : "dietas encontradas"}, ${safeCount} ${safeCount === 1 ? "segura" : "seguras"}`}
+              >
+                <span>{evaluations.length === 1 ? "1 encontrada" : `${evaluations.length} encontradas`}</span>
+                <strong><ShieldCheck size={16} /> {safeCount === 1 ? "1 segura" : `${safeCount} seguras`}</strong>
               </div>
             </div>
 
@@ -209,6 +212,7 @@ function App() {
                 <DietCard
                   key={evaluation.diet.id}
                   evaluation={evaluation}
+                  patient={patient}
                   recommended={index === 0 && evaluation.isSafe}
                   assigned={activeAssignment?.id === evaluation.diet.id}
                   onDetails={() => setDetails(evaluation)}
@@ -253,28 +257,41 @@ function App() {
 
 interface DietCardProps {
   evaluation: DietEvaluation;
+  patient: Patient;
   recommended: boolean;
   assigned: boolean;
   onDetails: () => void;
   onAssign: () => void;
 }
 
-function DietCard({ evaluation, recommended, assigned, onDetails, onAssign }: DietCardProps) {
+function DietCard({ evaluation, patient, recommended, assigned, onDetails, onAssign }: DietCardProps) {
   const { diet, conflicts, isSafe, matchScore } = evaluation;
+  const severity = getWorstSeverity(conflicts);
+  const tone = severity ?? "safe";
+  const allergyCount = conflicts.filter((conflict) => conflict.severity === "critical").length;
+  const showMatchScore = patient.diseaseIds.length > 1;
+
   return (
-    <article className={`diet-card ${isSafe ? "safe" : "unsafe"} ${assigned ? "assigned" : ""}`}>
+    <article className={`diet-card ${tone} ${assigned ? "assigned" : ""}`}>
       <div className="diet-status-column">
-        <span className={`status-symbol ${isSafe ? "safe" : "unsafe"}`}>
+        <span className={`status-symbol ${tone}`}>
           {isSafe ? <ShieldCheck size={23} /> : <ShieldAlert size={23} />}
         </span>
-        <span className="match-score">{matchScore}%<small>coincidencia</small></span>
+        <span className={`status-verdict ${tone}`}>
+          {isSafe ? "Segura" : "No asignable"}
+        </span>
+        {showMatchScore && <span className="match-score">{matchScore}%<small>coincidencia</small></span>}
       </div>
 
       <div className="diet-card-content">
         <div className="diet-title-row">
           <div>
-            <span className={`status-label ${isSafe ? "safe" : "unsafe"}`}>
-              {isSafe ? "Apta para asignación" : "Requiere atención"}
+            <span className={`status-label ${tone}`}>
+              {isSafe
+                ? "Apta para asignación"
+                : allergyCount > 0
+                  ? "Bloqueada por alergia"
+                  : "Bloqueada por incompatibilidad"}
             </span>
             {recommended && <span className="recommended-label">Recomendada</span>}
             {assigned && <span className="assigned-label">Asignada</span>}
@@ -284,11 +301,20 @@ function DietCard({ evaluation, recommended, assigned, onDetails, onAssign }: Di
         <p className="diet-summary">{diet.summary}</p>
 
         {conflicts.length > 0 ? (
-          <div className="conflict-box" role="alert">
+          <div className={`conflict-box ${tone}`} role="alert">
             <AlertTriangle size={19} />
             <div>
-              <strong>{conflicts.length === 1 ? "Alerta de seguridad" : `${conflicts.length} alertas de seguridad`}</strong>
-              {conflicts.map((conflict) => <span key={`${conflict.type}-${conflict.ingredient}`}>{conflict.message}</span>)}
+              <strong>
+                {conflicts.length === 1 ? "1 alerta de seguridad" : `${conflicts.length} alertas de seguridad`}
+              </strong>
+              {conflicts.map((conflict) => (
+                <span key={`${conflict.type}-${conflict.ingredient}`}>
+                  <b className={`severity-tag ${conflict.severity}`}>
+                    {conflict.severity === "critical" ? "Alergia" : "Incompatibilidad"}
+                  </b>
+                  {conflict.message}
+                </span>
+              ))}
             </div>
           </div>
         ) : (
@@ -326,6 +352,7 @@ interface DetailsProps {
 
 function DietDetails({ evaluation, patient, onClose, onAssign }: DetailsProps) {
   const { diet, conflicts, isSafe } = evaluation;
+  const tone = getWorstSeverity(conflicts) ?? "safe";
   return (
     <div className="drawer-layer" role="presentation" onMouseDown={(event) => event.target === event.currentTarget && onClose()}>
       <aside className="details-drawer" role="dialog" aria-modal="true" aria-labelledby="details-title">
@@ -342,7 +369,7 @@ function DietDetails({ evaluation, patient, onClose, onAssign }: DetailsProps) {
           <div><small>Contexto del paciente</small><strong>{patient.name}</strong><span>{getDiseaseNames(patient)}</span></div>
         </div>
 
-        <div className={`drawer-safety ${isSafe ? "safe" : "unsafe"}`}>
+        <div className={`drawer-safety ${tone}`}>
           {isSafe ? <ShieldCheck size={22} /> : <ShieldAlert size={22} />}
           <div>
             <strong>{isSafe ? "Compatible con el perfil registrado" : "Dieta no asignable"}</strong>
@@ -354,8 +381,14 @@ function DietDetails({ evaluation, patient, onClose, onAssign }: DetailsProps) {
           <section className="details-section alert-section">
             <h3>Alertas encontradas</h3>
             {conflicts.map((conflict) => (
-              <div className="detail-alert" key={`${conflict.type}-${conflict.ingredient}`}>
-                <AlertTriangle size={18} /> <span>{conflict.message}</span>
+              <div className={`detail-alert ${conflict.severity}`} key={`${conflict.type}-${conflict.ingredient}`}>
+                <AlertTriangle size={18} />
+                <span>
+                  <b className={`severity-tag ${conflict.severity}`}>
+                    {conflict.severity === "critical" ? "Alergia" : "Incompatibilidad"}
+                  </b>
+                  {conflict.message}
+                </span>
               </div>
             ))}
           </section>
@@ -378,10 +411,17 @@ function DietDetails({ evaluation, patient, onClose, onAssign }: DetailsProps) {
 
         <section className="details-section">
           <h3>Componentes principales</h3>
+          <p className="section-hint">Los componentes marcados son los que generan la alerta para este paciente.</p>
           <div className="ingredient-list">
-            {diet.ingredients.map((ingredient) => (
-              <span key={ingredient.name}><Leaf size={14} /> {ingredient.name}</span>
-            ))}
+            {diet.ingredients.map((ingredient) => {
+              const conflict = conflicts.find((item) => item.ingredient === ingredient.name);
+              return (
+                <span key={ingredient.name} className={conflict ? conflict.severity : undefined}>
+                  {conflict ? <AlertTriangle size={14} /> : <Leaf size={14} />} {ingredient.name}
+                  {conflict && <b>{conflict.patientCondition}</b>}
+                </span>
+              );
+            })}
           </div>
         </section>
 
