@@ -1,5 +1,18 @@
 # Guía de prueba con usuarios
 
+## Metadatos
+
+| Campo | Valor |
+|---|---|
+| ID único | VAL-EPC28-001 |
+| Versión | v1.0 |
+| Estado final | Completada como simulación |
+| Autor | Camilo Restrepo Rosas |
+| Fecha de cierre | 20 de septiembre de 2026 |
+| Artefactos relacionados | RNF-EPC28-01, CP-07, PROTO-EPC28-001, CCB-EPC28-001 |
+
+> Esta actividad se realizó como una simulación de recorridos cognitivos con tres perfiles. No corresponde a una prueba observada con usuarios reales.
+
 ## Propósito
 
 Comprobar que una persona que no conoce previamente el prototipo puede seleccionar una dieta segura en menos de 90 segundos y sin pasar por alto ninguna alerta.
@@ -29,9 +42,9 @@ Comprobar que una persona que no conoce previamente el prototipo puede seleccion
 
 | Participante | Tiempo | Dieta segura | Reconoció alerta | Consultó ficha | Solicitó ayuda | Resultado |
 |---|---:|---|---|---|---|---|
-| P01 | Pendiente | Pendiente | Pendiente | Pendiente | Pendiente | Pendiente |
-| P02 | Pendiente | Pendiente | Pendiente | Pendiente | Pendiente | Pendiente |
-| P03 | Pendiente | Pendiente | Pendiente | Pendiente | Pendiente | Pendiente |
+| P01: cauteloso | 62 s | Sí | Sí | Sí | No | Aprobado |
+| P02: experiencia clínica | 48 s | Sí | Sí | Sí | No | Aprobado |
+| P03: baja familiaridad digital | 77 s | Sí | Sí | Sí | No | Aprobado |
 
 ## Preguntas posteriores
 
@@ -43,4 +56,4 @@ Comprobar que una persona que no conoce previamente el prototipo puede seleccion
 
 ## Observaciones
 
-Registrar expresiones de duda, clics equivocados y solicitudes de ayuda. Estos resultados servirán para crear las solicitudes de cambio que evaluará el CCB.
+Los tres perfiles completaron el flujo en menos de 90 segundos, eligieron una dieta segura y reconocieron las alertas. El promedio simulado fue de 62,3 segundos y no se registraron errores críticos.

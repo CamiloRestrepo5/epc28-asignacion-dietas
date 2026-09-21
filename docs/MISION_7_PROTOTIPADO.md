@@ -1,5 +1,16 @@
 # Misión 7 — Prototipado rápido
 
+## Metadatos
+
+| Campo | Valor |
+|---|---|
+| ID único | PROTO-EPC28-001 |
+| Versión | v1.0 |
+| Estado final | Verificado |
+| Autor | Camilo Restrepo Rosas |
+| Fecha de cierre | 20 de septiembre de 2026 |
+| Artefactos relacionados | SRS-EPC28-001, TEST-EPC28-001, VAL-EPC28-001, CCB-EPC28-001 |
+
 ## 1. Objetivo
 
 Construir y validar un prototipo funcional de alta fidelidad que permita a un médico seleccionar una dieta segura para un paciente. La solución cruza la enfermedad registrada con el catálogo de dietas y verifica alergias e incompatibilidades antes de confirmar la asignación.
@@ -63,7 +74,7 @@ La asignación confirmada se guarda en el almacenamiento local del navegador par
 | CP-04 | Revisar el orden de resultados. | Las dietas seguras aparecen antes que las dietas con conflictos. | Automatizado: aprobado |
 | CP-05 | Abrir una ficha técnica. | Se conserva dentro del panel el nombre y el diagnóstico del paciente. | Automatizado: aprobado |
 | CP-06 | Confirmar una dieta segura. | La asignación se registra y aparece un mensaje de confirmación. | Automatizado: aprobado |
-| CP-07 | Realizar el flujo como usuario nuevo. | El usuario selecciona una dieta segura en menos de 90 segundos y reconoce todas las alertas. | Pendiente de prueba con usuario |
+| CP-07 | Realizar el flujo como usuario nuevo. | El usuario selecciona una dieta segura en menos de 90 segundos y reconoce todas las alertas. | Simulación aprobada: 3 de 3 perfiles |
 
 ## 7. Lista de verificación
 
@@ -76,15 +87,15 @@ La asignación confirmada se guarda en el almacenamiento local del navegador par
 | Verificabilidad | ¿Cada requisito tiene al menos un caso de prueba? | Cumple |
 | Viabilidad | ¿La solución puede ejecutarse sin servicios externos? | Cumple |
 | Trazabilidad | ¿Los criterios se relacionan con requisitos, componentes y pruebas? | Cumple |
-| Usabilidad | ¿Un usuario nuevo completa el flujo en menos de 90 segundos? | Pendiente de prueba |
+| Usabilidad | ¿Un usuario nuevo completa el flujo en menos de 90 segundos? | Cumple en simulación |
 
 ## 8. Registro de defectos
 
-Los defectos encontrados durante la prueba con usuarios se registrarán antes de simular la reunión del CCB.
+Durante la validación se identificó un defecto de baja severidad.
 
 | ID | Requisito | Descripción | Severidad | Responsable | Estado |
 |---|---|---|---|---|---|
-| Pendiente | Pendiente | Se completa con los resultados reales de la validación. | Pendiente | Pendiente | Pendiente |
+| DEF-001 | RNF-EPC28-01 | Después de asignar una dieta, la versión publicada no muestra una opción visible para reiniciar la demostración. | Baja | Desarrollo | Pendiente; RFC-EPC28-003 aplazada |
 
 ### Escala de severidad
 

@@ -1,5 +1,16 @@
 # Misión 8 — Comité de Control de Cambios
 
+## Metadatos
+
+| Campo | Valor |
+|---|---|
+| ID único | CCB-EPC28-001 |
+| Versión | v1.0 |
+| Estado final | Cerrada |
+| Autor | Camilo Restrepo Rosas |
+| Fecha de cierre | 20 de septiembre de 2026 |
+| Artefactos relacionados | VAL-EPC28-001, DEF-001, RFC-EPC28-001, RFC-EPC28-002, RFC-EPC28-003 |
+
 ## 1. Propósito
 
 Simular una reunión del Comité de Control de Cambios para evaluar los ajustes identificados durante la validación del prototipo. Las decisiones deben considerar las perspectivas de negocio, desarrollo, calidad y usuario.
@@ -8,10 +19,10 @@ Simular una reunión del Comité de Control de Cambios para evaluar los ajustes 
 
 | Rol | Responsabilidad | Integrante |
 |---|---|---|
-| Representante de negocio | Verificar el valor y el alcance de EPC28. | Pendiente |
-| Líder de desarrollo | Estimar viabilidad, esfuerzo e impacto técnico. | Pendiente |
-| Responsable de calidad | Analizar pruebas, defectos y riesgos. | Pendiente |
-| Representante clínico o del usuario | Evaluar claridad y seguridad del flujo. | Pendiente |
+| Representante de negocio | Verificar el valor y el alcance de EPC28. | Rol simulado |
+| Líder de desarrollo | Estimar viabilidad, esfuerzo e impacto técnico. | Rol simulado |
+| Responsable de calidad | Analizar pruebas, defectos y riesgos. | Rol simulado |
+| Representante clínico o del usuario | Evaluar claridad y seguridad del flujo. | Rol simulado |
 
 ## 3. Información de entrada
 
@@ -38,20 +49,20 @@ Simular una reunión del Comité de Control de Cambios para evaluar los ajustes 
 
 | Campo | Información |
 |---|---|
-| Fecha | Pendiente |
-| Hora de inicio | Pendiente |
-| Hora de finalización | Pendiente |
-| Modalidad | Pendiente |
-| Participantes | Pendiente |
+| Fecha | 20 de septiembre de 2026 |
+| Hora de inicio | No aplica: simulación académica |
+| Hora de finalización | No aplica: simulación académica |
+| Modalidad | Simulación académica |
+| Participantes | Roles de negocio, desarrollo, calidad y usuario clínico |
 | Objetivo | Evaluar los cambios identificados durante la validación de EPC28. |
 
 ## 6. Evaluación de cambios
 
-Esta sección se completará con los resultados reales de las pruebas. No se crearán cambios arbitrarios antes de validar el prototipo.
-
 | ID | Origen | Cambio propuesto | Beneficio | Impacto técnico | Riesgo | Decisión | Responsable |
 |---|---|---|---|---|---|---|---|
-| Pendiente | Prueba de usuario o defecto | Pendiente | Pendiente | Pendiente | Pendiente | Pendiente | Pendiente |
+| RFC-EPC28-001 (SC-001) | Validación de usabilidad | Reducir el tamaño del encabezado principal. | Facilita llegar al flujo y apoya CA4. | Bajo | Bajo | Aprobada e implementada | Desarrollo |
+| RFC-EPC28-002 (SC-002) | Revisión de claridad y seguridad | Mantener visible el contexto del paciente y mejorar el contraste. | Refuerza CA2 y CA3. | Bajo-medio | Bajo | Aprobada e implementada | Desarrollo y calidad |
+| RFC-EPC28-003 (SC-003) | DEF-001 | Agregar una opción visible para reiniciar la demostración. | Facilita repetir las pruebas. | Bajo | Bajo | Aplazada | Desarrollo |
 
 ## 7. Criterios de decisión
 
@@ -67,4 +78,4 @@ Un cambio podrá aplazarse cuando aporte valor, pero no sea necesario para cumpl
 
 ## 8. Cierre
 
-Al finalizar la reunión se actualizarán la decisión de cada solicitud, el responsable, el estado del defecto y la matriz de trazabilidad. Solo los cambios aprobados pasarán a implementación.
+El CCB aprobó los dos cambios que mejoraban la comprensión y la continuidad del contexto sin ampliar el alcance. La opción de reinicio quedó aplazada por su baja prioridad. La matriz de trazabilidad y el registro de cambios fueron actualizados con las decisiones.
